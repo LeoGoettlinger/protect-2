@@ -55,6 +55,7 @@ import net.thenextlvl.protect.flag.FlagRegistry;
 import net.thenextlvl.protect.flag.ProtectionFlag;
 import net.thenextlvl.protect.listeners.AreaListener;
 import net.thenextlvl.protect.listeners.ConnectionListener;
+import net.thenextlvl.protect.listeners.EntityBreakListener;
 import net.thenextlvl.protect.listeners.EntityListener;
 import net.thenextlvl.protect.listeners.MovementListener;
 import net.thenextlvl.protect.listeners.NexoListener;
@@ -174,12 +175,26 @@ public final class ProtectPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MovementListener(this), this);
         getServer().getPluginManager().registerEvents(new PhysicsListener(this), this);
         getServer().getPluginManager().registerEvents(new WorldListener(this), this);
+        if (isClassPresent("io.papermc.paper.event.entity.EntityBreakEvent")) registerEntityBreakEvents();
         final var nexo = getServer().getPluginManager().getPlugin("Nexo");
         if (nexo != null) registerNexoEvents(nexo);
     }
 
+    private void registerEntityBreakEvents() {
+        getServer().getPluginManager().registerEvents(new EntityBreakListener(this), this);
+    }
+
     private void registerNexoEvents(final Plugin nexo) {
         getServer().getPluginManager().registerEvents(new NexoListener(this, nexo), this);
+    }
+
+    private static boolean isClassPresent(final String className) {
+        try {
+            Class.forName(className, false, ProtectPlugin.class.getClassLoader());
+            return true;
+        } catch (final ClassNotFoundException ignored) {
+            return false;
+        }
     }
 
     private void registerCommands() {

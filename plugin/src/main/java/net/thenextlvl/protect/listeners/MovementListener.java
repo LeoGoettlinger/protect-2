@@ -9,9 +9,11 @@ import net.thenextlvl.protect.area.event.player.PlayerAreaTransitionEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityMountEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
@@ -44,6 +46,14 @@ public final class MovementListener implements Listener {
         if (canMove(event.getEntity(), event.getFrom(), event.getTo())) return;
         event.getFrom().setPitch(event.getTo().getPitch());
         event.getFrom().setYaw(event.getTo().getYaw());
+        event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityMount(final EntityMountEvent event) {
+        if (event.getMount() instanceof Vehicle) return;
+        if (!(event.getEntity() instanceof final Player player)) return;
+        if (canMove(player, player.getLocation(), event.getMount().getLocation())) return;
         event.setCancelled(true);
     }
 

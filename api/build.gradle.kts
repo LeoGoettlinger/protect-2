@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
+    compileOnlyApi("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.16.1")
 }
 
 
